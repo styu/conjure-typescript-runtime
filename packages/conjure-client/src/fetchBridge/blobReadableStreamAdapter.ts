@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright 2018 Palantir Technologies, Inc.
+ * Copyright 2019 Palantir Technologies, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,4 +15,17 @@
  * limitations under the License.
  */
 
-declare module "node-fetch-polyfill";
+export function blobToReadableStream(blobPromise: Promise<Blob>): ReadableStream<Uint8Array> {
+    return new ReadableStream({
+        start: controller => {
+            const reader = new FileReader();
+            reader.onload = () => {
+                controller.enqueue(new Uint8Array(reader.result as ArrayBuffer));
+            };
+            reader.onerror = () => {
+                controller.error(reader.error);
+            };
+            blobPromise.then(blob => reader.readAsArrayBuffer(blob));
+        },
+    });
+}

@@ -112,6 +112,7 @@ describe("RetryingFetch", () => {
         const originalSetTimeout = window.setTimeout;
         const mockedSetTimeout = jest.fn((callback, timeout) => {
             originalSetTimeout(callback, timeout);
+            return 0;
         });
         window.setTimeout = mockedSetTimeout;
 
@@ -145,6 +146,7 @@ function createFetchRequest(method: string, data?: any, contentType = "applicati
 
 function createFetchResponse(data: any, status: number): IFetchResponse {
     return {
+        body: new ReadableStream(),
         blob: () => Promise.resolve(new Blob([data])),
         headers: new Headers(),
         json: () => Promise.resolve(JSON.parse(data)),
