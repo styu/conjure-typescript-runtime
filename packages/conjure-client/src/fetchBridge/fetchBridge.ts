@@ -21,9 +21,7 @@ import { blobToReadableStream } from "./blobReadableStreamAdapter";
 
 export interface IFetchBody {
     json(): Promise<any>;
-
     text(): Promise<string>;
-
     blob(): Promise<Blob>;
 }
 
